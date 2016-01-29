@@ -83,7 +83,7 @@ script:
  # (including tests/benchmarks)
  - cabal build
 
- - cabal test --test-options='--quickcheck-tests 1000000 --smallcheck-depth 10 -p highestPower'
+ - cabal test --test-options='--quickcheck-tests 3000000 --smallcheck-depth 10 -p highestPower'
  # - cabal check
 
  # tests that a source-distribution can be generated
