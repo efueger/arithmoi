@@ -282,7 +282,7 @@ rawPower :: Int -> Integer -> (Integer, Int)
 rawPower mx n
   | mx < 2      = undefined (n,1)
   | mx == 2     = case P2.exactSquareRoot n of
-                    Just r  -> undefined (r,2)
+                    Just r  -> (r,2)
                     Nothing -> (n,1)
 rawPower mx n = case P4.exactFourthRoot n of
                   Just r -> case undefined $ rawPower (mx `quot` 4) r of
