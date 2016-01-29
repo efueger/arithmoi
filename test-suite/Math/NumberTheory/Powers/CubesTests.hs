@@ -137,11 +137,9 @@ testSuite = testGroup "Cubes"
     , testSmallAndQuick    "almost cube Int"  integerCubeRootProperty2_Int
     , testSmallAndQuick    "almost cube Word" integerCubeRootProperty2_Word
 
-    #if WORD_SIZE_IN_BITS == 64
     , testCase             "maxBound :: Int"      integerCubeRootSpecialCase1_Int
     , testCase             "maxBound / 2 :: Word" integerCubeRootSpecialCase1_Word
     , testCase             "maxBound :: Word"     integerCubeRootSpecialCase2
-    #endif
     ]
   , testIntegralProperty "integerCubeRoot'" integerCubeRoot'Property
   , testIntegralProperty "isCube"           isCubeProperty
