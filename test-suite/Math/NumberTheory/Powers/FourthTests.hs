@@ -20,6 +20,7 @@ import Test.Tasty
 import Test.Tasty.HUnit
 
 import Data.Maybe
+import Data.Word
 
 import Math.NumberTheory.Powers.Fourth
 import Math.NumberTheory.TestUtils

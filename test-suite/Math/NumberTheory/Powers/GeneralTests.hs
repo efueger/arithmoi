@@ -16,6 +16,7 @@ module Math.NumberTheory.Powers.GeneralTests
 
 import Test.Tasty
 import Test.Tasty.HUnit
+import Data.Word
 
 import Math.NumberTheory.Powers.General
 import Math.NumberTheory.TestUtils
