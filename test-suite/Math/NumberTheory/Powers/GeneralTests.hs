@@ -72,10 +72,38 @@ highestPowerSpecialCase2 :: Assertion
 highestPowerSpecialCase2 =
   assertEqual "highestPower" (highestPower $ 1013582159576576^7) (1013582159576576, 7 :: Int)
 
+highestPowerSpecialCase3 :: Assertion
+highestPowerSpecialCase3 =
+  assertEqual "highestPower" (highestPower $ n) (n, 1 :: Int)
+  where
+    n = 576116746989720969230211509779286598589421531472851155101032940901763389787901933902294777750323196846498573545522289802689311975294763847414975335235584
+
+highestPowerSpecialCase4 :: Assertion
+highestPowerSpecialCase4 =
+  assertEqual "highestPower" (highestPower $ n) (n, 1 :: Int)
+  where
+    n = -340282366920938463500268095579187314689
+
+highestPowerSpecialCase5 :: Assertion
+highestPowerSpecialCase5 =
+  assertEqual "highestPower" (highestPower $ n) (n, 1 :: Int)
+  where
+    n = 268398749 :: Int
+
+highestPowerSpecialCase6 :: Assertion
+highestPowerSpecialCase6 =
+  assertEqual "highestPower" (highestPower $ n) (n, 1 :: Int)
+  where
+    n = 118372752099 :: Int
+
 testSuite :: TestTree
 testSuite = testGroup "General"
   [ testCase              "highestPower special case 1" highestPowerSpecialCase1
   , testCase              "highestPower special case 2" highestPowerSpecialCase2
+  , testCase              "highestPower special case 3" highestPowerSpecialCase3
+  , testCase              "highestPower special case 4" highestPowerSpecialCase4
+  , testCase              "highestPower special case 5" highestPowerSpecialCase5
+  , testCase              "highestPower special case 6" highestPowerSpecialCase6
 
   , testIntegral2Property "integerRoot"    integerRootProperty
   , testIntegral2Property "isKthPower"     isKthPowerProperty

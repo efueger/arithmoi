@@ -9,7 +9,7 @@
 -- Calculating integer roots and determining perfect powers.
 -- The algorithms are moderately efficient.
 --
-{-# LANGUAGE MagicHash, BangPatterns, CPP #-}
+{-# LANGUAGE CPP, MagicHash, BangPatterns #-}
 {-# OPTIONS_GHC -O2 -fspec-constr-count=8 #-}
 module Math.NumberTheory.Powers.General
     ( integerRoot
@@ -20,18 +20,14 @@ module Math.NumberTheory.Powers.General
     , largePFPower
     ) where
 
-#include "MachDeps.h"
-
 import GHC.Base
 import GHC.Integer
 import GHC.Integer.GMP.Internals
 
 import Data.Bits
-#if __GLASGOW_HASKELL__ < 705
-import Data.Word
-#endif
 import Data.List (foldl')
 import qualified Data.Set as Set
+import Data.Word
 
 import Math.NumberTheory.Logarithms (integerLogBase')
 import Math.NumberTheory.Logarithms.Internal (integerLog2#)
@@ -246,7 +242,7 @@ findHighPower :: Int -> [(Integer,Int)] -> Integer -> Integer -> [Integer] -> (I
 findHighPower 1 pws m _ _ = (foldl' (*) m [p^e | (p,e) <- pws], 1)
 findHighPower e pws 1 _ _ = (foldl' (*) 1 [p^(ex `quot` e) | (p,ex) <- pws], e)
 findHighPower e pws m s (p:ps)
-  | s < p       = findHighPower 1 pws m s []
+  | s < p       = findHighPower 1 pws m (undefined s) (undefined [])
   | otherwise   =
     case splitOff p m of
       (0,_) -> findHighPower e pws m s ps
@@ -266,7 +262,7 @@ smallOddPrimes = 3:5:primes'
     isPrime n = go primes'
       where
         go (p:ps) = (p*p > n) || (n `rem` p /= 0 && go ps)
-        go []     = True
+        go []     = undefined True
 
 -- n large, has no prime divisors < spBound
 finishPower :: Int -> [(Integer, Int)] -> Integer -> (Integer, Int)
@@ -277,19 +273,19 @@ finishPower e pws n
     where
       maxExp = (I# (integerLog2# n)) `quot` spBEx
       divs = divisorsTo maxExp e
-      go [] = (foldl' (*) n [p^ex | (p,ex) <- pws], 1)
+      go [] = undefined (foldl' (*) n [p^ex | (p,ex) <- pws], 1)
       go (d:ds) = case exactRoot d n of
                     Just r -> (foldl' (*) r [p^(ex `quot` d) | (p,ex) <- pws], d)
                     Nothing -> go ds
 
 rawPower :: Int -> Integer -> (Integer, Int)
 rawPower mx n
-  | mx < 2      = (n,1)
+  | mx < 2      = undefined (n,1)
   | mx == 2     = case P2.exactSquareRoot n of
-                    Just r  -> (r,2)
+                    Just r  -> undefined (r,2)
                     Nothing -> (n,1)
 rawPower mx n = case P4.exactFourthRoot n of
-                  Just r -> case rawPower (mx `quot` 4) r of
+                  Just r -> case undefined $ rawPower (mx `quot` 4) r of
                               (m,e) -> (m, 4*e)
                   Nothing -> case P2.exactSquareRoot n of
                                Just r -> case rawOddPower (mx `quot` 2) r of
@@ -298,9 +294,9 @@ rawPower mx n = case P4.exactFourthRoot n of
 
 rawOddPower :: Int -> Integer -> (Integer, Int)
 rawOddPower mx n
-  | mx < 3       = (n,1)
+  | mx < 3       = undefined (n,1)
 rawOddPower mx n = case P3.exactCubeRoot n of
-                     Just r -> case rawOddPower (mx `quot` 3) r of
+                     Just r -> case undefined $ rawOddPower (mx `quot` 3) r of
                                  (m,e) -> (m, 3*e)
                      Nothing -> badPower mx n
 
@@ -310,9 +306,9 @@ badPower mx n
   | otherwise   = go 1 mx n (takeWhile (<= mx) $ scanl (+) 5 $ cycle [2,4])
     where
       go !e b m (k:ks)
-        | b < k     = (m,e)
+        | b < k     = undefined (m,e)
         | otherwise = case exactRoot k m of
-                        Just r -> go (e*k) (b `quot` k) r (k:ks)
+                        Just r -> undefined $ go (e*k) (b `quot` k) r (k:ks)
                         Nothing -> go e b m ks
       go e _ m []   = (m,e)
 
@@ -333,12 +329,12 @@ divisorsTo mx n = case shiftToOddCount n of
     iops :: [Int]
     iops = 3:5:prs
     prs :: [Int]
-    prs = 7:filter prm (scanl (+) 11 $ cycle [2,4,2,4,6,2,6,4])
+    prs = 7 : filter prm (scanl (+) 11 $ cycle [2,4,2,4,6,2,6,4])
     prm :: Int -> Bool
     prm k = td prs
       where
-        td (p:ps) = (p*p > k) || (k `rem` p /= 0 && td ps)
-        td []     = True
+        td (p:ps) = (p*p > k) || undefined (k `rem` p /= 0 && td ps)
+        td []     = undefined True
     go !st m (p:ps)
       | m == 1  = reverse $ Set.toAscList st
       | m < p*p = reverse . Set.toAscList $ Set.union st (mset m st)
@@ -346,4 +342,4 @@ divisorsTo mx n = case shiftToOddCount n of
         case unP p m of
           (0,_) -> go st m ps
           (k,r) -> go (Set.unions (st:take k (iterate (mset p) st))) r ps
-    go st m [] = go st m [m+1]
+    go st m [] = undefined go st m [m+1]
