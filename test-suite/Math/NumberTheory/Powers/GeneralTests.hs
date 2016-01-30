@@ -51,8 +51,9 @@ isPerfectPowerProperty (AnySign n) = (k > 1 && t) || (k == 1 && not t)
 
 -- | Check that the first component of 'highestPower' is square-free.
 highestPowerProperty :: Integral a => AnySign a -> Bool
-highestPowerProperty (AnySign n) = (n `elem` [-1, 0, 1] && k == 3) || (b ^ k == n && b' == b && k' == 1)
+highestPowerProperty (AnySign n') = (n `elem` [-1, 0, 1] && k == 3) || (b ^ k == n && b' == b && k' == 1)
   where
+    n = n'^7
     (b, k) = highestPower n
     (b', k') = highestPower b
 
@@ -63,74 +64,65 @@ largePFPowerProperty (Positive bd) n = bd == 1 || b == 0 || d' /= 0 || n <= b * 
     (b, k) = largePFPower bd n
     (d, d') = bd `quotRem` b
 
--- | Freezes before d44a13b.
-highestPowerSpecialCase1 :: Assertion
-highestPowerSpecialCase1 =
-  assertEqual "highestPower" (highestPower 1013582159576576) (1013582159576576, 1 :: Int)
+highestPowerSpecialCases :: [Assertion]
+highestPowerSpecialCases =
+  -- Freezes before d44a13b.
+  [ a ( 1013582159576576
+      , 1013582159576576
+      , 1)
+  -- Freezes before d44a13b.
+  , a ( 1013582159576576 ^ 7
+      , 1013582159576576
+      , 7)
 
--- | Freezes before d44a13b.
-highestPowerSpecialCase2 :: Assertion
-highestPowerSpecialCase2 =
-  assertEqual "highestPower" (highestPower $ 1013582159576576^7) (1013582159576576, 7 :: Int)
+  , a ( -2 ^ 63 :: Int
+      , -2 :: Int
+      , 63)
 
-highestPowerSpecialCase3 :: Assertion
-highestPowerSpecialCase3 =
-  assertEqual "highestPower" (highestPower $ n) (n, 1 :: Int)
+  , a ( 19342813113834066793201664 ^ 21
+      , 19342813113834066793201664
+      , 21)
+
+  , a ( 576116746989720969230211509779286598589421531472851155101032940901763389787901933902294777750323196846498573545522289802689311975294763847414975335235584
+      , 576116746989720969230211509779286598589421531472851155101032940901763389787901933902294777750323196846498573545522289802689311975294763847414975335235584
+      , 1)
+
+  , a ( -340282366920938463500268095579187314689
+      , -340282366920938463500268095579187314689
+      , 1)
+
+  , a ( 268398749 :: Int
+      , 268398749 :: Int
+      , 1)
+
+  , a ( 118372752099 :: Int
+      , 118372752099 :: Int
+      , 1)
+
+  , a ( 1409777209 :: Int
+      , 37547 :: Int
+      , 2)
+
+  , a ( -6277101735386680764856636523970481806547819498980467802113
+      , -18446744073709551617
+      , 3)
+
+  , a ( -18446744073709551619 ^ 5
+      , -18446744073709551619
+      , 5)
+  ]
   where
-    n = 576116746989720969230211509779286598589421531472851155101032940901763389787901933902294777750323196846498573545522289802689311975294763847414975335235584
-
-highestPowerSpecialCase4 :: Assertion
-highestPowerSpecialCase4 =
-  assertEqual "highestPower" (highestPower $ n) (n, 1 :: Int)
-  where
-    n = -340282366920938463500268095579187314689
-
-highestPowerSpecialCase5 :: Assertion
-highestPowerSpecialCase5 =
-  assertEqual "highestPower" (highestPower $ n) (n, 1 :: Int)
-  where
-    n = 268398749 :: Int
-
-highestPowerSpecialCase6 :: Assertion
-highestPowerSpecialCase6 =
-  assertEqual "highestPower" (highestPower $ n) (n, 1 :: Int)
-  where
-    n = 118372752099 :: Int
-
-highestPowerSpecialCase7 :: Assertion
-highestPowerSpecialCase7 =
-  assertEqual "highestPower" (highestPower $ n) (37547, 2 :: Int)
-  where
-    n = 1409777209 :: Int
-
-highestPowerSpecialCase8 :: Assertion
-highestPowerSpecialCase8 =
-  assertEqual "highestPower" (highestPower $ n) (26633, 2 :: Int)
-  where
-    n = 709316689 :: Word
-
-highestPowerSpecialCase9 :: Assertion
-highestPowerSpecialCase9 =
-  assertEqual "highestPower" (highestPower $ n) (-18446744073709551617, 3 :: Int)
-  where
-    n = -6277101735386680764856636523970481806547819498980467802113
+    a (n, b, k) = assertEqual "highestPower" (b, k) (highestPower n)
 
 testSuite :: TestTree
 testSuite = testGroup "General"
-  [ testCase              "highestPower special case 1" highestPowerSpecialCase1
-  , testCase              "highestPower special case 2" highestPowerSpecialCase2
-  , testCase              "highestPower special case 3" highestPowerSpecialCase3
-  , testCase              "highestPower special case 4" highestPowerSpecialCase4
-  , testCase              "highestPower special case 5" highestPowerSpecialCase5
-  , testCase              "highestPower special case 6" highestPowerSpecialCase6
-  , testCase              "highestPower special case 7" highestPowerSpecialCase7
-  , testCase              "highestPower special case 8" highestPowerSpecialCase8
-  , testCase              "highestPower special case 9" highestPowerSpecialCase9
-
-  , testIntegral2Property "integerRoot"    integerRootProperty
+  [ testIntegral2Property "integerRoot"    integerRootProperty
   , testIntegral2Property "isKthPower"     isKthPowerProperty
   , testIntegral2Property "exactRoot"      exactRootProperty
   , testIntegralProperty  "isPerfectPower" isPerfectPowerProperty
-  , testIntegralProperty  "highestPower"   highestPowerProperty
+  , testGroup "highestPower"
+    ( testIntegralProperty  "highestPower"   highestPowerProperty
+    : zipWith (\i a -> testCase ("special case " ++ show i) a) [1..] highestPowerSpecialCases
+    )
   , testSmallAndQuick     "largePFPower"   largePFPowerProperty
   ]
