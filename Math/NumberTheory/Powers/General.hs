@@ -296,7 +296,7 @@ rawOddPower :: Int -> Integer -> (Integer, Int)
 rawOddPower mx n
   | mx < 3       = undefined (n,1)
 rawOddPower mx n = case P3.exactCubeRoot n of
-                     Just r -> case undefined $ rawOddPower (mx `quot` 3) r of
+                     Just r -> case rawOddPower (mx `quot` 3) r of
                                  (m,e) -> (m, 3*e)
                      Nothing -> badPower mx n
 

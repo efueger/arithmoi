@@ -103,6 +103,18 @@ highestPowerSpecialCase7 =
   where
     n = 1409777209 :: Int
 
+highestPowerSpecialCase8 :: Assertion
+highestPowerSpecialCase8 =
+  assertEqual "highestPower" (highestPower $ n) (26633, 2 :: Int)
+  where
+    n = 709316689 :: Word
+
+highestPowerSpecialCase9 :: Assertion
+highestPowerSpecialCase9 =
+  assertEqual "highestPower" (highestPower $ n) (-18446744073709551617, 3 :: Int)
+  where
+    n = -6277101735386680764856636523970481806547819498980467802113
+
 testSuite :: TestTree
 testSuite = testGroup "General"
   [ testCase              "highestPower special case 1" highestPowerSpecialCase1
@@ -112,6 +124,8 @@ testSuite = testGroup "General"
   , testCase              "highestPower special case 5" highestPowerSpecialCase5
   , testCase              "highestPower special case 6" highestPowerSpecialCase6
   , testCase              "highestPower special case 7" highestPowerSpecialCase7
+  , testCase              "highestPower special case 8" highestPowerSpecialCase8
+  , testCase              "highestPower special case 9" highestPowerSpecialCase9
 
   , testIntegral2Property "integerRoot"    integerRootProperty
   , testIntegral2Property "isKthPower"     isKthPowerProperty
