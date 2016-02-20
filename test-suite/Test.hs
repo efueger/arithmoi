@@ -17,6 +17,7 @@ import qualified Math.NumberTheory.Powers.IntegerTests as Integer
 import qualified Math.NumberTheory.Powers.SquaresTests as Squares
 
 import qualified Math.NumberTheory.PrimesTests as Primes
+import qualified Math.NumberTheory.Primes.CountingTests as Counting
 
 main :: IO ()
 main = defaultMain tests
@@ -46,5 +47,6 @@ tests = testGroup "All"
     ]
   , testGroup "Primes"
     [ Primes.testSuite
+    , Counting.testSuite
     ]
   ]
