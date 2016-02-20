@@ -19,6 +19,7 @@ import qualified Math.NumberTheory.Powers.SquaresTests as Squares
 import qualified Math.NumberTheory.PrimesTests as Primes
 import qualified Math.NumberTheory.Primes.CountingTests as Counting
 import qualified Math.NumberTheory.Primes.HeapTests as Heap
+import qualified Math.NumberTheory.Primes.SieveTests as Sieve
 
 main :: IO ()
 main = defaultMain tests
@@ -50,5 +51,6 @@ tests = testGroup "All"
     [ Primes.testSuite
     , Counting.testSuite
     , Heap.testSuite
+    , Sieve.testSuite
     ]
   ]
