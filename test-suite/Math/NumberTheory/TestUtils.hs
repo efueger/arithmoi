@@ -46,6 +46,8 @@ import Data.Traversable (Traversable)
 import Data.Word
 #endif
 
+import Math.NumberTheory.Primes
+
 newtype AnySign a = AnySign { getAnySign :: a }
   deriving (Eq, Ord, Read, Show, Num, Enum, Bounded, Integral, Real, Functor, Foldable, Traversable, Arbitrary)
 
@@ -85,6 +87,15 @@ instance (Monad m, Num a, Ord a, Serial m a) => Serial m (Power a) where
 
 instance (Num a, Ord a, Arbitrary (Small a)) => Arbitrary (Power a) where
   arbitrary = Power <$> (getSmall <$> arbitrary) `suchThat` (> 0)
+
+newtype Prime = Prime { getPrime :: Integer }
+  deriving (Eq, Ord, Show)
+
+instance Arbitrary Prime where
+  arbitrary = Prime <$> arbitrary `suchThat` (\p -> p > 0 && isPrime p)
+
+instance Monad m => Serial m Prime where
+  series = Prime <$> series `suchThatSerial` (\p -> p > 0 && isPrime p)
 
 instance Monad m => Serial m Word where
   series =
