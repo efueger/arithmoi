@@ -1,0 +1,9 @@
+engines:
+  hlint:
+    enabled: true
+ratings:
+  paths:
+  - Math/
+  - benchmark/
+exclude_paths:
+- test-suite/
